@@ -15,14 +15,10 @@ async def inline_query_handler(client, query):
         answers = []
         if text.strip() == "":
             answerss = await inline_help_func(__HELP__)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=10
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=10)
         elif text.split()[0] == "alive":
             answerss = await alive_function(answers)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=10
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=10)
         elif text.split()[0] == "tr":
             if len(text.split()) < 3:
                 return await client.answer_inline_query(
@@ -90,10 +86,7 @@ async def inline_query_handler(client, query):
                 )
             tex = text.split(None, 1)[1].strip()
             answerss = await wall_func(answers, tex)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=2
-            )
-
+            await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
         elif text.split()[0] == "saavn":
             if len(text.split()) < 2:
@@ -157,9 +150,7 @@ async def inline_query_handler(client, query):
             user_id = query.from_user.id
             tex = text.split(None, 1)[1].strip()
             answerss = await tg_search_func(answers, tex, user_id)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=2
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
         elif text.split()[0] == "music":
             if len(text.split()) < 2:
@@ -171,9 +162,7 @@ async def inline_query_handler(client, query):
                 )
             tex = text.split(None, 1)[1].strip()
             answerss = await music_inline_func(answers, tex)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=2
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
         elif text.split()[0] == "wiki":
             if len(text.split()) < 2:
@@ -185,9 +174,7 @@ async def inline_query_handler(client, query):
                 )
             tex = text.split(None, 1)[1].strip()
             answerss = await wiki_func(answers, tex)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=2
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
         elif text.split()[0] == "speedtest":
             answerss = await speedtest_init(query)
@@ -202,7 +189,6 @@ async def inline_query_handler(client, query):
                     switch_pm_text="gh | gh [USERNAME]",
                     switch_pm_parameter="inline",
                 )
-            results = []
             gett = text.split(None, 1)[1]
             text = gett + ' "site:github.com"'
             gresults = await GoogleSearch().async_search(text, 1)
@@ -216,7 +202,7 @@ async def inline_query_handler(client, query):
                     result += f"`{description}`\n\n"
                 except IndexError:
                     pass
-            results.append(
+            results = [
                 InlineQueryResultArticle(
                     title=f"Results for {gett}",
                     description=f" Github info of {title}\n  Touch to read",
@@ -224,15 +210,13 @@ async def inline_query_handler(client, query):
                         result, disable_web_page_preview=True
                     ),
                 )
-            )
-            await client.answer_inline_query(query.id, cache_time=0, results=results)
+            ]
 
+            await client.answer_inline_query(query.id, cache_time=0, results=results)
 
         elif text.split()[0] == "ping":
             answerss = await ping_func(answers)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=2
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
         elif text.split()[0] == "ytmusic":
             if len(text.split()) < 2:
@@ -244,9 +228,7 @@ async def inline_query_handler(client, query):
                 )
             tex = query.query.split(None, 1)[1].strip()
             answerss = await yt_music_func(answers, tex)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=2
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=2)
         elif text.split()[0] == "webss":
             if len(text.split()) < 2:
                 return await client.answer_inline_query(
@@ -269,9 +251,7 @@ async def inline_query_handler(client, query):
                 )
             tex = text.split()[1].strip()
             answerss = await info_inline_func(answers, tex)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=2
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
         elif text.split()[0] == "tmdb":
             if len(text.split()) < 2:
@@ -284,9 +264,7 @@ async def inline_query_handler(client, query):
                 )
             tex = text.split()[1].strip()
             answerss = await tmdb_func(answers, tex)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=2
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=2)
         elif text.split()[0] == "pokedex":
             if len(text.split()) < 2:
                 await client.answer_inline_query(
@@ -305,7 +283,6 @@ async def inline_query_handler(client, query):
             await client.answer_inline_query(query.id, results=answerss, cache_time=2)
 
         elif text.split()[0] == "fakegen":
-            results = []
             fake = Faker()
             name = str(fake.name())
             fake.add_provider(internet)
@@ -317,7 +294,7 @@ async def inline_query_handler(client, query):
             android = fake.android_platform_token()
             pc = fake.chrome()
             res = f"<b><u> Fake Information Generated</b></u>\n<b>Name :-</b><code>{name}</code>\n\n<b>Address:-</b><code>{address}</code>\n\n<b>IP ADDRESS:-</b><code>{ip}</code>\n\n<b>credit card:-</b><code>{cc}</code>\n\n<b>Email Id:-</b><code>{email}</code>\n\n<b>Job:-</b><code>{job}</code>\n\n<b>android user agent:-</b><code>{android}</code>\n\n<b>Pc user agent:-</b><code>{pc}</code>"
-            results.append(
+            results = [
                 InlineQueryResultArticle(
                     title="Fake infomation gathered",
                     description="Click here to see them",
@@ -325,9 +302,9 @@ async def inline_query_handler(client, query):
                         res, parse_mode="HTML", disable_web_page_preview=True
                     ),
                 )
-            )
-            await client.answer_inline_query(query.id, cache_time=0, results=results)
+            ]
 
+            await client.answer_inline_query(query.id, cache_time=0, results=results)
 
         elif text.split()[0] == "image":
             if len(text.split()) < 2:
@@ -344,16 +321,13 @@ async def inline_query_handler(client, query):
                 query.id, results=answerss, cache_time=3600
             )
 
-
         elif text.split()[0] == "exec":
             await execute_code(query)
 
         elif text.strip() == "tasks":
             user_id = query.from_user.id
             answerss = await task_inline_func(user_id)
-            await client.answer_inline_query(
-                query.id, results=answerss, cache_time=1
-            )
+            await client.answer_inline_query(query.id, results=answerss, cache_time=1)
 
     except Exception as e:
         e = traceback.format_exc()

@@ -37,13 +37,11 @@ rssdb = db.rss
 def obj_to_str(obj):
     if not obj:
         return False
-    string = codecs.encode(pickle.dumps(obj), "base64").decode()
-    return string
+    return codecs.encode(pickle.dumps(obj), "base64").decode()
 
 
 def str_to_obj(string: str):
-    obj = pickle.loads(codecs.decode(string.encode(), "base64"))
-    return obj
+    return pickle.loads(codecs.decode(string.encode(), "base64"))
 
 
 async def get_notes_count() -> dict:
@@ -68,8 +66,7 @@ async def _get_notes(chat_id: int) -> Dict[str, int]:
 
 async def get_note_names(chat_id: int) -> List[str]:
     _notes = []
-    for note in await _get_notes(chat_id):
-        _notes.append(note)
+    _notes.extend(iter(await _get_notes(chat_id)))
     return _notes
 
 
@@ -130,8 +127,7 @@ async def _get_filters(chat_id: int) -> Dict[str, int]:
 
 async def get_filters_names(chat_id: int) -> List[str]:
     _filters = []
-    for _filter in await _get_filters(chat_id):
-        _filters.append(_filter)
+    _filters.extend(iter(await _get_filters(chat_id)))
     return _filters
 
 
@@ -169,12 +165,9 @@ async def delete_filter(chat_id: int, name: str) -> bool:
 
 
 async def int_to_alpha(user_id: int) -> str:
-    alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
-    text = ""
     user_id = str(user_id)
-    for i in user_id:
-        text += alphabet[int(i)]
-    return text
+    alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
+    return "".join(alphabet[int(i)] for i in user_id)
 
 
 async def alpha_to_int(user_id_alphabet: str) -> int:
@@ -283,9 +276,7 @@ async def update_karma(chat_id: int, name: str, karma: dict):
     name = name.lower().strip()
     karmas = await get_karmas(chat_id)
     karmas[name] = karma
-    karmadb.update_one(
-        {"chat_id": chat_id}, {"$set": {"karma": karmas}}, upsert=True
-    )
+    karmadb.update_one({"chat_id": chat_id}, {"$set": {"karma": karmas}}, upsert=True)
 
 
 async def is_karma_on(chat_id: int) -> bool:
@@ -315,6 +306,7 @@ async def is_nsfw_on(chat_id: int) -> bool:
         return True
     return False
 
+
 async def nsfw_on(chat_id: int):
     is_nsfw = is_nsfw_on(chat_id)
     if is_nsfw:
@@ -341,8 +333,7 @@ async def get_served_chats() -> list:
     if not chats:
         return []
     chats_list = []
-    for chat in await chats.to_list(length=1000000000):
-        chats_list.append(chat)
+    chats_list.extend(iter(await chats.to_list(length=1000000000)))
     return chats_list
 
 
@@ -372,8 +363,7 @@ async def get_served_users() -> list:
     if not users:
         return []
     users_list = []
-    for user in await users.to_list(length=1000000000):
-        users_list.append(user)
+    users_list.extend(iter(await users.to_list(length=1000000000)))
     return users_list
 
 
@@ -615,10 +605,7 @@ async def deactivate_pipe(from_chat_id: int, to_chat_id: int):
     if not pipes:
         return
     for pipe in pipes:
-        if (
-            pipe["from_chat_id"] == from_chat_id
-            and pipe["to_chat_id"] == to_chat_id
-        ):
+        if pipe["from_chat_id"] == from_chat_id and pipe["to_chat_id"] == to_chat_id:
             pipes.remove(pipe)
     return await pipesdb.update_one(
         {"pipe": "pipe"}, {"$set": {"pipes": pipes}}, upsert=True
@@ -627,10 +614,7 @@ async def deactivate_pipe(from_chat_id: int, to_chat_id: int):
 
 async def is_pipe_active(from_chat_id: int, to_chat_id: int) -> bool:
     for pipe in await show_pipes():
-        if (
-            pipe["from_chat_id"] == from_chat_id
-            and pipe["to_chat_id"] == to_chat_id
-        ):
+        if pipe["from_chat_id"] == from_chat_id and pipe["to_chat_id"] == to_chat_id:
             return True
 
 
@@ -759,16 +743,14 @@ async def get_rss_feeds() -> list:
     feeds = await feeds.to_list(length=10000000)
     if not feeds:
         return
-    data = []
-    for feed in feeds:
-        data.append(
-            dict(
-                chat_id=feed["chat_id"],
-                url=feed["url"],
-                last_title=feed["last_title"],
-            )
+    return [
+        dict(
+            chat_id=feed["chat_id"],
+            url=feed["url"],
+            last_title=feed["last_title"],
         )
-    return data
+        for feed in feeds
+    ]
 
 
 async def get_rss_feeds_count() -> int:

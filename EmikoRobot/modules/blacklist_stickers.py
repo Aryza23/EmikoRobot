@@ -23,8 +23,7 @@ def blackliststicker(update: Update, context: CallbackContext):
     chat = update.effective_chat  # type: Optional[Chat]
     user = update.effective_user  # type: Optional[User]
     bot, args = context.bot, context.args
-    conn = connected(bot, update, chat, user.id, need_admin=False)
-    if conn:
+    if conn := connected(bot, update, chat, user.id, need_admin=False):
         chat_id = conn
         chat_name = dispatcher.bot.getChat(conn).title
     else:
@@ -48,12 +47,9 @@ def blackliststicker(update: Update, context: CallbackContext):
 
     split_text = split_message(sticker_list)
     for text in split_text:
-        if (
-            sticker_list
-            == "<b>List blacklisted stickers currently in {}:</b>\n".format(
-                chat_name,
-            ).format(html.escape(chat_name))
-        ):
+        if sticker_list == "<b>List blacklisted stickers currently in {}:</b>\n".format(
+            chat_name,
+        ).format(html.escape(chat_name)):
             send_message(
                 update.effective_message,
                 "There are no blacklist stickers in <b>{}</b>!".format(
@@ -73,8 +69,7 @@ def add_blackliststicker(update: Update, context: CallbackContext):
     user = update.effective_user  # type: Optional[User]
     words = msg.text.split(None, 1)
     bot = context.bot
-    conn = connected(bot, update, chat, user.id)
-    if conn:
+    if conn := connected(bot, update, chat, user.id):
         chat_id = conn
         chat_name = dispatcher.bot.getChat(conn).title
     else:
@@ -166,8 +161,7 @@ def unblackliststicker(update: Update, context: CallbackContext):
     user = update.effective_user  # type: Optional[User]
     words = msg.text.split(None, 1)
     bot = context.bot
-    conn = connected(bot, update, chat, user.id)
-    if conn:
+    if conn := connected(bot, update, chat, user.id):
         chat_id = conn
         chat_name = dispatcher.bot.getChat(conn).title
     else:

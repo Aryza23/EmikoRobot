@@ -23,21 +23,14 @@ def generate_time(to_find: str, findtype: List[str]) -> str:
                 country_zone = zone["zoneName"]
                 country_code = zone["countryCode"]
 
-                if zone["dst"] == 1:
-                    daylight_saving = "Yes"
-                else:
-                    daylight_saving = "No"
-
+                daylight_saving = "Yes" if zone["dst"] == 1 else "No"
                 date_fmt = r"%d-%m-%Y"
                 time_fmt = r"%H:%M:%S"
                 day_fmt = r"%A"
                 gmt_offset = zone["gmtOffset"]
-                timestamp = (
-                    datetime.datetime.now(
-                        datetime.timezone.utc,
-                    )
-                    + datetime.timedelta(seconds=gmt_offset)
-                )
+                timestamp = datetime.datetime.now(
+                    datetime.timezone.utc,
+                ) + datetime.timedelta(seconds=gmt_offset)
                 current_date = timestamp.strftime(date_fmt)
                 current_time = timestamp.strftime(time_fmt)
                 current_day = timestamp.strftime(day_fmt)

@@ -24,10 +24,11 @@ async def get_user_info(user, already=False):
         "ID": user_id,
         "DC": dc_id,
         "Name": [first_name],
-        "Username": [("@" + username) if username else None],
+        "Username": [f"@{username}" if username else None],
         "Mention": [mention],
         "Sudo": is_sudo,
     }
+
     caption = section("User info", body)
     return [caption, photo_id]
 
@@ -51,13 +52,14 @@ async def get_chat_info(chat, already=False):
         "DC": dc_id,
         "Type": type_,
         "Name": [title],
-        "Username": [("@" + username) if username else None],
+        "Username": [f"@{username}" if username else None],
         "Mention": [link],
         "Members": members,
         "Scam": is_scam,
         "Restricted": is_restricted,
         "Description": [description],
     }
+
     caption = section("Chat info", body)
     return [caption, photo_id]
 
@@ -66,9 +68,9 @@ async def get_chat_info(chat, already=False):
 async def info_func(_, message: Message):
     if message.reply_to_message:
         user = message.reply_to_message.from_user.id
-    elif not message.reply_to_message and len(message.command) == 1:
+    elif len(message.command) == 1:
         user = message.from_user.id
-    elif not message.reply_to_message and len(message.command) != 1:
+    else:
         user = message.text.split(None, 1)[1]
 
     m = await message.reply_text("Processing...")
@@ -79,14 +81,10 @@ async def info_func(_, message: Message):
         return await m.edit(str(e))
 
     if not photo_id:
-        return await m.edit(
-            info_caption, disable_web_page_preview=True
-        )
+        return await m.edit(info_caption, disable_web_page_preview=True)
     photo = await app.download_media(photo_id)
 
-    await message.reply_photo(
-        photo, caption=info_caption, quote=False
-    )
+    await message.reply_photo(photo, caption=info_caption, quote=False)
     await m.delete()
     os.remove(photo)
 
@@ -95,9 +93,7 @@ async def info_func(_, message: Message):
 async def chat_info_func(_, message: Message):
     try:
         if len(message.command) > 2:
-            return await message.reply_text(
-                "**Usage:**cinfo <chat id/username>"
-            )
+            return await message.reply_text("**Usage:**cinfo <chat id/username>")
 
         if len(message.command) == 1:
             chat = message.chat.id
@@ -108,14 +104,10 @@ async def chat_info_func(_, message: Message):
 
         info_caption, photo_id = await get_chat_info(chat)
         if not photo_id:
-            return await m.edit(
-                info_caption, disable_web_page_preview=True
-            )
+            return await m.edit(info_caption, disable_web_page_preview=True)
 
         photo = await app.download_media(photo_id)
-        await message.reply_photo(
-            photo, caption=info_caption, quote=False
-        )
+        await message.reply_photo(photo, caption=info_caption, quote=False)
 
         await m.delete()
         os.remove(photo)

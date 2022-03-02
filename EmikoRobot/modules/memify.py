@@ -10,7 +10,9 @@ async def handler(event):
     if event.fwd_from:
         return
     if not event.reply_to_msg_id:
-        await event.reply("`Provide Some Text To Draw! And Reply To Image/Stickers EXAMPLE: /mmf text`")
+        await event.reply(
+            "`Provide Some Text To Draw! And Reply To Image/Stickers EXAMPLE: /mmf text`"
+        )
         return
     reply_message = await event.get_reply_message()
     if not reply_message.media:
@@ -36,10 +38,7 @@ async def drawText(image_path, text):
     os.remove(image_path)
     shadowcolor = "black"
     i_width, i_height = img.size
-    if os.name == "nt":
-        fnt = "ariel.ttf"
-    else:
-        fnt = "./EmikoRobot/resources/default.ttf"
+    fnt = "ariel.ttf" if os.name == "nt" else "./EmikoRobot/resources/default.ttf"
     m_font = ImageFont.truetype(fnt, int((70 / 640) * i_width))
     if ";" in text:
         upper_text, lower_text = text.split(";")

@@ -276,9 +276,7 @@ async def update_karma(chat_id: int, name: str, karma: dict):
     name = name.lower().strip()
     karmas = await get_karmas(chat_id)
     karmas[name] = karma
-    karmadb.update_one(
-        {"chat_id": chat_id}, {"$set": {"karma": karmas}}, upsert=True
-    )
+    karmadb.update_one({"chat_id": chat_id}, {"$set": {"karma": karmas}}, upsert=True)
 
 
 async def is_karma_on(chat_id: int) -> bool:
@@ -307,6 +305,7 @@ async def is_nsfw_on(chat_id: int) -> bool:
     if not chat:
         return True
     return False
+
 
 async def nsfw_on(chat_id: int):
     is_nsfw = is_nsfw_on(chat_id)
@@ -606,10 +605,7 @@ async def deactivate_pipe(from_chat_id: int, to_chat_id: int):
     if not pipes:
         return
     for pipe in pipes:
-        if (
-            pipe["from_chat_id"] == from_chat_id
-            and pipe["to_chat_id"] == to_chat_id
-        ):
+        if pipe["from_chat_id"] == from_chat_id and pipe["to_chat_id"] == to_chat_id:
             pipes.remove(pipe)
     return await pipesdb.update_one(
         {"pipe": "pipe"}, {"$set": {"pipes": pipes}}, upsert=True
@@ -618,10 +614,7 @@ async def deactivate_pipe(from_chat_id: int, to_chat_id: int):
 
 async def is_pipe_active(from_chat_id: int, to_chat_id: int) -> bool:
     for pipe in await show_pipes():
-        if (
-            pipe["from_chat_id"] == from_chat_id
-            and pipe["to_chat_id"] == to_chat_id
-        ):
+        if pipe["from_chat_id"] == from_chat_id and pipe["to_chat_id"] == to_chat_id:
             return True
 
 
@@ -750,11 +743,14 @@ async def get_rss_feeds() -> list:
     feeds = await feeds.to_list(length=10000000)
     if not feeds:
         return
-    return [dict(
-                chat_id=feed["chat_id"],
-                url=feed["url"],
-                last_title=feed["last_title"],
-            ) for feed in feeds]
+    return [
+        dict(
+            chat_id=feed["chat_id"],
+            url=feed["url"],
+            last_title=feed["last_title"],
+        )
+        for feed in feeds
+    ]
 
 
 async def get_rss_feeds_count() -> int:

@@ -161,9 +161,7 @@ def connect_chat(update, context):
                 ]
             else:
                 buttons = []
-            if conn := connected(
-                context.bot, update, chat, user.id, need_admin=False
-            ):
+            if conn := connected(context.bot, update, chat, user.id, need_admin=False):
                 connectedchat = dispatcher.bot.getChat(conn)
                 text = "You are currently connected to *{}* (`{}`)".format(
                     connectedchat.title,
@@ -202,7 +200,7 @@ def connect_chat(update, context):
                         ],
                     )
                 text += "╘══「 Total {} Chats 」".format(
-                    f'{len(gethistory)} (max)'
+                    f"{len(gethistory)} (max)"
                     if len(gethistory) == 5
                     else str(len(gethistory))
                 )

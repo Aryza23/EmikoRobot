@@ -53,7 +53,7 @@ async def hmm(_, message):
         message.continue_propagation()
     status = message.text.split(None, 1)[1]
     chat_id = message.chat.id
-    if status == "ON" or status == "on" or status == "On":
+    if status in ["ON", "on", "On"]:
         lel = await edit_or_reply(message, "`Processing...`")
         lol = add_chat(int(message.chat.id))
         if not lol:
@@ -61,7 +61,7 @@ async def hmm(_, message):
             return
         await lel.edit(f"Emiko AI Actived by {message.from_user.mention()} for users in {message.chat.title}")
 
-    elif status == "OFF" or status == "off" or status == "Off":
+    elif status in ["OFF", "off", "Off"]:
         lel = await edit_or_reply(message, "`Processing...`")
         Escobar = remove_chat(int(message.chat.id))
         if not Escobar:
@@ -69,8 +69,8 @@ async def hmm(_, message):
             return
         await lel.edit(f"Emiko AI Deactivated by {message.from_user.mention()} for users in {message.chat.title}")
 
-    elif status == "EN" or status == "en" or status == "english":
-        if not chat_id in en_chats:
+    elif status in ["EN", "en", "english"]:
+        if chat_id not in en_chats:
             en_chats.append(chat_id)
             await message.reply_text(f"English AI chat Enabled by {message.from_user.mention()}")
             return
@@ -145,12 +145,6 @@ async def hmm(client, message):
                 "Hi, My name is Emiko Nice to meet you")
 
         pro = response
-        try:
-            await pbot.send_chat_action(message.chat.id, "typing")
-            await message.reply_text(pro)
-        except CFError:
-            return
-
     else:
         u = msg.split()
         emj = extract_emojis(msg)
@@ -186,7 +180,7 @@ async def hmm(client, message):
         except:
             return
         test = rm
-        if not "en" in lan and not lan == "":
+        if "en" not in lan and lan != "":
             try:
                 test = translator.translate(test, dest="en")
                 test = test.text
@@ -231,17 +225,17 @@ async def hmm(client, message):
                 "Hi, my friend, what can I do for you today?",
                 "Hi, My name is Emiko Nice to meet you")
         pro = response
-        if not "en" in lan and not lan == "":
+        if "en" not in lan and lan != "":
             try:
                 pro = translator.translate(pro, dest=lan)
                 pro = pro.text
             except:
                 return
-        try:
-            await pbot.send_chat_action(message.chat.id, "typing")
-            await message.reply_text(pro)
-        except CFError:
-            return
+    try:
+        await pbot.send_chat_action(message.chat.id, "typing")
+        await message.reply_text(pro)
+    except CFError:
+        return
 
 
 @pbot.on_message(filters.text & filters.private & ~filters.edited & filters.reply & ~filters.bot)
@@ -283,7 +277,7 @@ async def inuka(client, message):
     except:
         return
     test = rm
-    if not "en" in lan and not lan == "":
+    if "en" not in lan and lan != "":
         try:
             test = translator.translate(test, dest="en")
             test = test.text
@@ -326,7 +320,7 @@ async def inuka(client, message):
             "Hi, My name is Emiko Nice to meet you")
 
     pro = response
-    if not "en" in lan and not lan == "":
+    if "en" not in lan and lan != "":
         pro = translator.translate(pro, dest=lan)
         pro = pro.text
     try:
@@ -375,7 +369,7 @@ async def inuka(client, message):
     except:
         return
     test = rm
-    if not "en" in lan and not lan == "":
+    if "en" not in lan and lan != "":
         try:
             test = translator.translate(test, dest="en")
             test = test.text
@@ -387,7 +381,7 @@ async def inuka(client, message):
     test = test.replace("Emiko", "Aco")
     test = test.replace("Emiko", "Aco")
     test = test.replace("My god is @excrybaby", "I'm a Christian")
-    test = test.replace("16", "9") 
+    test = test.replace("16", "9")
     test = test.replace("@excrybaby is my husband.", "I'm single.")
     test = test.replace("@emikosupport", "Emikobot.ai")
     test = test.replace("I live in @emikosupport.", "I live in San Francisco, California.")
@@ -406,7 +400,7 @@ async def inuka(client, message):
     response = response.replace("luna", "emiko")
     response = response.replace("I'm a Christian", "My god is @excrybaby")
     response = response.replace("I'm married to my job.", "I'm married with @excrybaby")
-    response = response.replace("9", "16") 
+    response = response.replace("9", "16")
     response = response.replace("I'm single.", "My husband is @excrybaby")
     response = response.replace("Emikobot.ai", "@emikosupport")
     response = response.replace("I live in San Francisco, California.", "I live in @emikosupport.")
@@ -420,7 +414,7 @@ async def inuka(client, message):
             "Hi, My name is Emik Nice to meet you")
 
     pro = response
-    if not "en" in lan and not lan == "":
+    if "en" not in lan and lan != "":
         try:
             pro = translator.translate(pro, dest=lan)
             pro = pro.text

@@ -255,8 +255,7 @@ pbot = Client(
     bot_token=TOKEN,
     workers=min(32, os.cpu_count() + 4),
 )
-apps = []
-apps.append(pbot)
+apps = [pbot]
 loop = asyncio.get_event_loop()
 
 async def get_entity(client, entity):

@@ -458,7 +458,7 @@ def unban(update: Update, context: CallbackContext) -> Optional[str]:
         return log_message
 
     if is_user_in_chat(chat, user_id):
-        message.reply_text(f"⚠️ User not found.")
+        message.reply_text("⚠️ User not found.")
         return log_message
 
     chat.unban_member(user_id)

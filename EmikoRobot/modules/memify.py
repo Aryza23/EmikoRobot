@@ -36,10 +36,7 @@ async def drawText(image_path, text):
     os.remove(image_path)
     shadowcolor = "black"
     i_width, i_height = img.size
-    if os.name == "nt":
-        fnt = "ariel.ttf"
-    else:
-        fnt = "./EmikoRobot/resources/default.ttf"
+    fnt = "ariel.ttf" if os.name == "nt" else "./EmikoRobot/resources/default.ttf"
     m_font = ImageFont.truetype(fnt, int((70 / 640) * i_width))
     if ";" in text:
         upper_text, lower_text = text.split(";")
